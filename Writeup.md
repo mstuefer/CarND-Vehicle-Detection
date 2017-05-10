@@ -10,14 +10,17 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 [//]: # (Image References)
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
+[image1]: ./output_images/car.jpg
+[image2]: ./output_images/notcar.jpg
+[image3]: ./output_images/car_hog.jpg
+[image4]: ./output_images/notcar_hog.jpg
+[image5]: ./output_images/out_img10.jpg
+[image6]: ./output_images/out_img15.jpg
+[image7]: ./output_images/out_img20.jpg
+[image8]: ./output_images/original.jpg
+[image9]: ./output_images/heatmap.jpg
+[image10]: ./output_images/heatmap_final.jpg
+[video1]: ./project_output_video.mp4
 
 ---
 ## Writeup / README
@@ -36,13 +39,15 @@ Afterwards I created the function get_hog_features, as we did during lecture, to
 I read all images, separated them in non-vehicles and vehicles, and visualize a non-vehicle and a vehicle with the
 corresponding hog images.
 
-![alt text][image1]
-![alt text][image2]
+![car][image1]
+![notcar][image2]
+![car_hog][image3]
+![notcar_hog][image4]
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
 I tried various combinations of parameters, starting with the setup we also used during lecture, and end up with the
-current set values.
+current set values after several manual tests.
 
 ####3. Describe how you trained a classifier using your selected HOG features and color features.
 
@@ -73,9 +78,13 @@ The function itself does the following 'crucial' things:
  * defined: all three hog channels, blocks and steps to use
  * extracted the hog_features
  * then for each window extracted the hog_feature for that specific patch and invoked bin_spatial and color_hist
- * scaled the features and run the prediction, in prediction was possitiv I added a rectangle to the image and added the box to my bbox container 
+ * scaled the features and run the prediction, if the prediction was positive I added a rectangle to the image and added the box to my bbox container 
 
-![alt text][image3]
+#### Here the result with different scales (1, 1.5, 2):
+
+![scale1][image5]
+![scale15][image6]
+![scale2][image7]
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -83,13 +92,13 @@ As already stated in point three, and in the final thoughts, I tried to improve 
 then also via using the GridSearchCV. To optimize the performance instead I tried to increase the pixels per cell, but 
 then stopped there since I'm still not saitisfied with my classifier on the final video.
 
-![alt text][image4]
+![result][image8]
 ---
 
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_output_video.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -100,17 +109,16 @@ I then used `scipy.ndimage.measurements.label()` to identify individual blobs in
 I then assumed each blob corresponded to a vehicle.  
 I constructed bounding boxes to cover the area of each blob detected.  
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+Here's an example result showing the starting image, the heatmap, 
+and the bounding boxes then overlaid on the last frame of video:
 
-### Here are six frames and their corresponding heatmaps:
+### Here the test-frame and the corresponding heatmap:
 
-![alt text][image5]
+![original][image8]
+![heatmap][image9]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
+### Here the resulting bounding boxes drawn on the test-frame:
+![finally][image10]
 
 ---
 
